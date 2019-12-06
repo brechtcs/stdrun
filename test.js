@@ -41,6 +41,7 @@ test('generator', async t => {
 })
 
 async function collect (fn) {
+  var force = true
   var out = Buffer.alloc(0)
   var err = Buffer.alloc(0)
   var process = {
@@ -57,7 +58,7 @@ async function collect (fn) {
     }
   }
 
-  await run(fn, { process })
+  await run(fn, { force, process })
 
   return { out, err }
 }

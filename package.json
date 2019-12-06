@@ -1,6 +1,6 @@
 {
   "name": "stdrun",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Create a CLI with a single function",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "stdarg": "^1.0.0",
-    "stdopt": "^2.0.0"
+    "stdopt": "^2.2.0"
   },
   "devDependencies": {
     "standard": "^14.3.1",

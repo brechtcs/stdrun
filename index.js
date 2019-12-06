@@ -2,6 +2,8 @@ var arg = require('stdarg')
 var opt = require('stdopt')
 
 module.exports = async function run (fn, conf = {}) {
+  if (isModule(conf.force)) return
+
   var result, output, chunk
   var { argv, stdout, stderr } = opt(conf.process).or(process).value()
   var { opts, args } = splitOpts(arg(argv))
@@ -23,6 +25,10 @@ module.exports = async function run (fn, conf = {}) {
   } catch (e) {
     stderr.write(e.stack + '\n')
   }
+}
+
+function isModule (noModule) {
+  return !noModule && !!module.parent.parent
 }
 
 function splitOpts (opts) {
