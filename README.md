@@ -62,7 +62,7 @@ run(main)
 
 ### Node streams
 
-Because `stdrun` supports bote asynchronous and iterable output, you can send any Node stream directly to your terminal.
+Because `stdrun` supports both streaming and asynchronous output, you can send any Node stream directly to your terminal.
 
 ```js
 var fs = require('fs')
