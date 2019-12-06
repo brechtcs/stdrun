@@ -8,10 +8,10 @@ We can define a basic command line program with the following code:
 
 ```js
 // example.js
-var run = require('stdrun')
+var { run, lines } = require('stdrun')
 
 function main (opts = {}, ...args) {
-  return `
+  return lines`
     Options: ${JSON.stringify(opts)}
     Arguments: ${args.join(', ')}
   `
@@ -33,12 +33,12 @@ Arguments: some, stuff
 It is also possible to gradually stream your output to `stdout`. For this we can use a generator function.
 
 ```js
-var run = require('stdrun')
+var { run, line } = require('stdrun')
 
 function* main () {
-  yield 'first\n'
-  yield 'second\n'
-  yield 'third\n'
+  yield line('first')
+  yield line('second')
+  yield line('third')
 }
 
 run(main)
@@ -55,6 +55,21 @@ var run = require('stdrun')
 async function main () {
   var content = await fs.readFile('./README.md')
   return content.toUpperCase()
+}
+
+run(main)
+```
+
+### Node streams
+
+Because `stdrun` supports bote asynchronous and iterable output, you can send any Node stream directly to your terminal.
+
+```js
+var fs = require('fs')
+var run = require('stdrun')
+
+async function main (opts, file) {
+  return fs.createReadStream(file)
 }
 
 run(main)

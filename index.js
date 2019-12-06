@@ -1,21 +1,29 @@
 var arg = require('stdarg')
+var dedent = require('dedent')
+var it = require('./iterator')
 var opt = require('stdopt')
 
-module.exports = async function run (fn, conf = {}) {
+module.exports = run
+module.exports.lines = lines
+module.exports.line = line
+module.exports.run = run
+
+async function run (fn, conf = {}) {
   if (isModule(conf.force)) return
 
-  var result, output, chunk
+  var result, output, iterator, chunk
   var { argv, stdout, stderr } = opt(conf.process).or(process).value()
   var { opts, args } = splitOpts(arg(argv))
 
   try {
     result = await fn(opts, ...args)
     output = opt(result).or('').value()
+    iterator = it(output)
 
-    if (typeof output.next !== 'function') {
+    if (!iterator) {
       return stdout.write(output)
     }
-    for await (chunk of output) {
+    for await (chunk of iterator) {
       if (chunk instanceof Error) {
         stderr.write(chunk.stack + '\n')
       } else {
@@ -27,6 +35,18 @@ module.exports = async function run (fn, conf = {}) {
   }
 }
 
+function lines (...args) {
+  var out = dedent(...args)
+  return out + '\n'
+}
+
+function line (out) {
+  return String(out) + '\n'
+}
+
+/**
+ * Private helpers
+ */
 function isModule (noModule) {
   return !noModule && !!module.parent.parent
 }

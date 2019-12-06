@@ -1,7 +1,7 @@
-var run = require('./')
+var { run, lines } = require('./')
 
 function main (opts = {}, ...args) {
-  return `
+  return lines`
     Options: ${JSON.stringify(opts)}
     Arguments: ${args.join(', ')}
   `

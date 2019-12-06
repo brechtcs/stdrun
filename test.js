@@ -1,19 +1,27 @@
-var run = require('./')
+var { run, line } = require('./')
+var fs = require('fs')
 var test = require('tape')
 
-test('basic return', async t => {
+test('return', async t => {
   var { out, err } = await collect(() => 'yep')
   t.equal(out.toString(), 'yep')
   t.equal(err.toString(), '')
   t.end()
 })
 
-test('basic error', async t => {
+test('error', async t => {
   var { out, err } = await collect(() => {
     throw new Error('nope')
   })
   t.equal(out.length, 0)
   t.ok(err.toString().includes('Error: nope'))
+  t.end()
+})
+
+test('array', async t => {
+  var { out, err } = await collect(() => [1, 2, 3].map(line))
+  t.equal(out.toString(), '1\n2\n3\n')
+  t.equal(err.toString(), '')
   t.end()
 })
 
@@ -37,6 +45,15 @@ test('generator', async t => {
   t.ok(err.toString().includes('Error: alert!'))
   t.ok(err.toString().includes('Error: nope'))
   t.notOk(out.toString().includes('nothing\n'))
+  t.end()
+})
+
+test('stream', async t => {
+  var { out, err } = await collect(() => {
+    return fs.createReadStream('./README.md')
+  })
+  t.ok(out.toString().startsWith('# stdrun\n'))
+  t.equal(err.toString(), '')
   t.end()
 })
 

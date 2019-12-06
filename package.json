@@ -1,12 +1,13 @@
 {
   "name": "stdrun",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Create a CLI with a single function",
   "main": "index.js",
   "scripts": {
     "test": "tape test.js && standard"
   },
   "dependencies": {
+    "dedent": "^0.7.0",
     "stdarg": "^1.0.0",
     "stdopt": "^2.2.0"
   },
