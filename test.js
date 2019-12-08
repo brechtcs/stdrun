@@ -53,7 +53,29 @@ test('stream', async t => {
     return fs.createReadStream('./README.md')
   })
   t.ok(out.toString().startsWith('# stdrun\n'))
+  t.ok(out.toString().endsWith('Apache-2.0\n'))
   t.equal(err.toString(), '')
+  t.end()
+})
+
+test('other', async t => {
+  var obj = await collect(() => ({}))
+  t.equal(obj.out.toString(), '[object Object]')
+  t.equal(obj.err.toString(), '')
+
+  var toString = await collect(() => {
+    var buf = Buffer.from('ping')
+    buf.toString = () => 'pong'
+    return buf
+  })
+  t.equal(Buffer.prototype.toString.call(toString.out), 'pong')
+  t.equal(toString.err.toString(), '')
+
+  var typedArr = await collect(() => {
+    return Uint8Array.from([8, 5, 7])
+  })
+  t.equal(typedArr.out.length, 3)
+  t.equal(typedArr.err.toString(), '')
   t.end()
 })
 
@@ -65,12 +87,12 @@ async function collect (fn) {
     argv: ['/usr/bin/node', 'example.js'],
     stdout: {
       write: function (data) {
-        out = Buffer.concat([out, Buffer.from(data)])
+        out = Buffer.concat([out, data])
       }
     },
     stderr: {
       write: function (data) {
-        err = Buffer.concat([err, Buffer.from(data)])
+        err = Buffer.concat([err, data])
       }
     }
   }
