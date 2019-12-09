@@ -1,6 +1,6 @@
 {
   "name": "stdrun",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Create a CLI with a single function",
   "main": "index.js",
   "scripts": {

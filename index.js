@@ -21,7 +21,7 @@ async function run (fn, conf = {}) {
     output = opt(result).or('').value()
     iterator = getIterator(output)
 
-    if (!iterator) {
+    if (!iterator || toStringOverruled(output)) {
       buffer = toBuffer(output)
       return stdout.write(buffer)
     }
@@ -77,7 +77,7 @@ function splitOpts (opts) {
 }
 
 function toBuffer (data) {
-  if (Object.getPrototypeOf(data).toString !== data.toString) {
+  if (toStringOverruled(data)) {
     return Buffer.from(data.toString())
   } else if (Buffer.isBuffer(data)) {
     return data
@@ -85,4 +85,8 @@ function toBuffer (data) {
     return Buffer.from(data)
   }
   return Buffer.from(data.toString())
+}
+
+function toStringOverruled (data) {
+  return Object.getPrototypeOf(data).toString !== data.toString
 }

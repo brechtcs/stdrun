@@ -63,19 +63,46 @@ test('other', async t => {
   t.equal(obj.out.toString(), '[object Object]')
   t.equal(obj.err.toString(), '')
 
-  var toString = await collect(() => {
-    var buf = Buffer.from('ping')
-    buf.toString = () => 'pong'
-    return buf
-  })
-  t.equal(Buffer.prototype.toString.call(toString.out), 'pong')
-  t.equal(toString.err.toString(), '')
-
   var typedArr = await collect(() => {
     return Uint8Array.from([8, 5, 7])
   })
   t.equal(typedArr.out.length, 3)
   t.equal(typedArr.err.toString(), '')
+  t.end()
+})
+
+test('toString', async t => {
+  var buffer = await collect(() => {
+    var buf = Buffer.from('ping')
+    buf.toString = () => 'pong'
+    return buf
+  })
+  t.equal(Buffer.prototype.toString.call(buffer.out), 'pong')
+  t.equal(buffer.err.toString(), '')
+
+  var array = await collect(() => {
+    var arr = [1, 2]
+    arr.toString = () => 'one, two'
+    return arr
+  })
+  t.equal(Buffer.prototype.toString.call(array.out), 'one, two')
+  t.equal(array.err.toString(), '')
+
+  var items = await collect(() => {
+    function toString () {
+      return line(this.descr)
+    }
+
+    return [
+      { val: 1, descr: 'first' },
+      { val: 2, descr: 'second' }
+    ].map(item => {
+      item.toString = toString
+      return item
+    })
+  })
+  t.equal(items.out.toString(), 'first\nsecond\n')
+  t.equal(items.err.toString(), '')
   t.end()
 })
 
