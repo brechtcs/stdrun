@@ -1,10 +1,13 @@
 {
   "name": "stdrun",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "description": "Create a CLI with a single function",
   "main": "index.js",
   "scripts": {
-    "test": "tape test.js && standard"
+    "example:args": "node example it works --yep",
+    "example:stdin": "echo 'it works!' | node example read stdin",
+    "example:test": "npm run example:args && npm run example:stdin",
+    "test": "tape test.js && npm run example:test && standard"
   },
   "dependencies": {
     "dedent": "^0.7.0",

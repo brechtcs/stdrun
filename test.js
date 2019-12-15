@@ -1,4 +1,4 @@
-var { run, line } = require('./')
+var { run, text } = require('./')
 var fs = require('fs')
 var test = require('tape')
 
@@ -19,7 +19,7 @@ test('error', async t => {
 })
 
 test('array', async t => {
-  var { out, err } = await collect(() => [1, 2, 3].map(line))
+  var { out, err } = await collect(() => [1, 2, 3].map(n => text`${n}`))
   t.equal(out.toString(), '1\n2\n3\n')
   t.equal(err.toString(), '')
   t.end()
@@ -42,7 +42,7 @@ test('generator', async t => {
   t.ok(out.toString().includes('first\n'))
   t.ok(out.toString().includes('second\n'))
   t.ok(out.toString().includes('third\n'))
-  t.ok(err.toString().includes('Error: alert!'))
+  t.ok(err.toString().includes('alert!'))
   t.ok(err.toString().includes('Error: nope'))
   t.notOk(out.toString().includes('nothing\n'))
   t.end()
@@ -90,7 +90,7 @@ test('toString', async t => {
 
   var items = await collect(() => {
     function toString () {
-      return line(this.descr)
+      return text`${this.descr}`
     }
 
     return [

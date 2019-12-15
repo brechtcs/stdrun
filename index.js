@@ -5,13 +5,27 @@ var it = require('es-get-iterator')
 var opt = require('stdopt')
 
 module.exports = run
-module.exports.lines = lines
-module.exports.line = line
+module.exports.main = main
 module.exports.run = run
+module.exports.sub = sub
+module.exports.text = text
+
+var cmd = {
+  level: -1,
+  plan: function (level, fn) {
+    if (level < this.level) return
+    clearTimeout(this.task)
+    this.task = setTimeout(task)
+    this.level = level
+
+    function task () {
+      process.argv.splice(2, level)
+      run(fn)
+    }
+  }
+}
 
 async function run (fn, conf = {}) {
-  if (isModule(conf.force)) return
-
   var result, output, iterator, buffer, chunk
   var { argv, stdout, stderr } = opt(conf.process).or(process).value()
   var { opts, args } = splitOpts(arg(argv))
@@ -27,7 +41,7 @@ async function run (fn, conf = {}) {
     }
     for await (chunk of iterator) {
       if (chunk instanceof Error) {
-        buffer = toBuffer(chunk.stack + '\n')
+        buffer = toBuffer(chunk.message + '\n')
         stderr.write(buffer)
       } else {
         buffer = toBuffer(chunk)
@@ -40,13 +54,31 @@ async function run (fn, conf = {}) {
   }
 }
 
-function lines (...args) {
-  var out = dedent(...args)
-  return out + '\n'
+function main (fn) {
+  cmd.plan(0, fn)
 }
 
-function line (out) {
-  return String(out) + '\n'
+function sub (...args) {
+  var fn, idx, level, arg
+  fn = args.pop()
+  idx = 2
+  level = 0
+
+  for (arg of args) {
+    if (arg === process.argv[idx]) {
+      level++
+    } else {
+      return
+    }
+    idx++
+  }
+
+  cmd.plan(level, fn)
+}
+
+function text (...args) {
+  var out = dedent(...args)
+  return out + '\n'
 }
 
 /**
@@ -60,10 +92,6 @@ function getIterator (data) {
     return data[Symbol.asyncIterator]()
   }
   return it(data)
-}
-
-function isModule (noModule) {
-  return !noModule && !!module.parent.parent
 }
 
 function splitOpts (opts) {
