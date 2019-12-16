@@ -10,9 +10,9 @@
     "test": "tape test.js && npm run example:test && standard"
   },
   "dependencies": {
-    "dedent": "^0.7.0",
     "es-get-iterator": "^1.0.1",
     "is-typedarray": "^1.0.0",
+    "outdent": "^0.7.0",
     "stdarg": "^1.0.0",
     "stdopt": "^2.2.0"
   },

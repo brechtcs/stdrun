@@ -19,7 +19,7 @@ test('error', async t => {
 })
 
 test('array', async t => {
-  var { out, err } = await collect(() => [1, 2, 3].map(n => text`${n}`))
+  var { out, err } = await collect(() => [1, 2, 3].map(text))
   t.equal(out.toString(), '1\n2\n3\n')
   t.equal(err.toString(), '')
   t.end()
@@ -90,7 +90,7 @@ test('toString', async t => {
 
   var items = await collect(() => {
     function toString () {
-      return text`${this.descr}`
+      return text(this.descr)
     }
 
     return [

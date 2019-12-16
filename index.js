@@ -1,8 +1,9 @@
+var { EOL } = require('os')
 var arg = require('stdarg')
-var dedent = require('dedent')
 var isTypedArray = require('is-typedarray')
 var it = require('es-get-iterator')
 var opt = require('stdopt')
+var outdent = require('outdent')
 
 module.exports = run
 module.exports.main = main
@@ -77,8 +78,10 @@ function sub (...args) {
 }
 
 function text (...args) {
-  var out = dedent(...args)
-  return out + '\n'
+  var out = Array.isArray(args[0])
+    ? outdent({ newline: EOL })(...args)
+    : String(args[0])
+  return out + EOL
 }
 
 /**

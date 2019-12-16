@@ -22,7 +22,7 @@ run(main)
 
 Which you can then run in your terminal:
 
-```sh
+```
 $ node example.js --yes some stuff --target="./path/to/somewhere"
 Options: {"yes": true, "target": "./path/to/somewhere"}
 Arguments: some, stuff
@@ -68,13 +68,13 @@ Commands can output two kinds of errors. Critical errors that terminate the prog
 var { run, text } = require('stdrun')
 
 function * main (opts = {}) {
-  yield text`Some stuff.`
+  yield text('Some stuff.')
 
   if (opts.panic) {
     throw new Error('Panic!')
   }
   yield new Error('Something went wrong.')
-  yield text`Some more stuff.`
+  yield text('Some more stuff.')
 }
 
 run(main)
@@ -96,7 +96,7 @@ sub('hello', () => text`world`)
 
 Which you can execute like so:
 
-```sh
+```
 $ node commands.js hello
 world
 $ node commands.js nested
