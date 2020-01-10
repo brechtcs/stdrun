@@ -112,6 +112,7 @@ async function collect (fn) {
   var err = Buffer.alloc(0)
   var process = {
     argv: ['/usr/bin/node', 'example.js'],
+    exit: function () {},
     stdout: {
       write: function (data) {
         out = Buffer.concat([out, data])

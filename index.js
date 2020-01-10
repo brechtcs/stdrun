@@ -28,7 +28,7 @@ var cmd = {
 
 async function run (fn, conf = {}) {
   var result, output, iterator, buffer, chunk
-  var { argv, stdout, stderr } = opt(conf.process).or(process).value()
+  var { argv, stdout, stderr, exit } = opt(conf.process).or(process).value()
   var { opts, args } = splitOpts(arg(argv))
 
   try {
@@ -52,6 +52,7 @@ async function run (fn, conf = {}) {
   } catch (e) {
     buffer = toBuffer(e.stack + '\n')
     stderr.write(buffer)
+    exit(1)
   }
 }
 
