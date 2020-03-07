@@ -1,4 +1,5 @@
 var { run, text } = require('./')
+var VError = require('verror')
 var fs = require('fs')
 var test = require('tape')
 
@@ -11,10 +12,12 @@ test('return', async t => {
 
 test('error', async t => {
   var { out, err } = await collect(() => {
-    throw new Error('nope')
+    var err = new Error('nope')
+    throw new VError(err, 'program error')
   })
   t.equal(out.length, 0)
-  t.ok(err.toString().includes('Error: nope'))
+  t.ok(err.toString().includes('VError: program error'))
+  t.ok(err.toString().includes('caused by: Error: nope'))
   t.end()
 })
 

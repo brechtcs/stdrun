@@ -14,7 +14,8 @@
     "is-typedarray": "^1.0.0",
     "outdent": "^0.7.0",
     "stdarg": "^1.0.0",
-    "stdopt": "^2.2.0"
+    "stdopt": "^2.2.0",
+    "verror": "^1.10.0"
   },
   "devDependencies": {
     "standard": "^14.3.1",

@@ -1,4 +1,5 @@
 var { EOL } = require('os')
+var { fullStack } = require('verror')
 var arg = require('stdarg')
 var isTypedArray = require('is-typedarray')
 var it = require('es-get-iterator')
@@ -50,7 +51,7 @@ async function run (fn, conf = {}) {
       }
     }
   } catch (e) {
-    buffer = toBuffer(e.stack + '\n')
+    buffer = toBuffer(fullStack(e) + '\n')
     stderr.write(buffer)
     exit(1)
   }
