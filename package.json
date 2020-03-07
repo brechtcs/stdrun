@@ -1,6 +1,6 @@
 {
   "name": "stdrun",
-  "version": "5.0.2",
+  "version": "5.1.0",
   "description": "Create a CLI with a single function",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "is-typedarray": "^1.0.0",
     "outdent": "^0.7.0",
     "stdarg": "^1.0.0",
-    "stdopt": "^2.2.0",
+    "stdopt": "^10.0.0",
     "verror": "^1.10.0"
   },
   "devDependencies": {
